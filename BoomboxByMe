@@ -1,0 +1,51 @@
+local screenGui = Instance.new("ScreenGui")
+local frame = Instance.new("Frame")
+local textBox = Instance.new("TextBox")
+local playButton = Instance.new("TextButton")
+local toggleButton = Instance.new("TextButton")
+
+screenGui.Name = "MusicGui"
+screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = true 
+
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+frame.Parent = screenGui
+
+textBox.Size = UDim2.new(0, 260, 0, 30)
+textBox.Position = UDim2.new(0, 20, 0, 20)
+textBox.PlaceholderText = "Enter Music ID"
+textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+textBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+textBox.Parent = frame
+
+playButton.Size = UDim2.new(0, 260, 0, 30)
+playButton.Position = UDim2.new(0, 20, 0, 60)
+playButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+playButton.Text = "Play Music"
+playButton.Parent = frame
+
+toggleButton.Size = UDim2.new(0, 100, 0, 30)
+toggleButton.Position = UDim2.new(0.9, -50, 0, 10)
+toggleButton.BackgroundColor3 = Color3.fromRGB(200, 100, 100)
+toggleButton.Text = "Toggle OFF"
+toggleButton.Parent = screenGui
+
+local guiVisible = true
+toggleButton.MouseButton1Click:Connect(function()
+    guiVisible = not guiVisible
+    frame.Visible = guiVisible
+    toggleButton.Text = guiVisible and "Toggle OFF" or "Toggle ON"
+end)
+
+playButton.MouseButton1Click:Connect(function()
+    local musicID = textBox.Text
+    if musicID and musicID ~= "" then
+        local args = {
+            [1] = "rbxassetid://" .. musicID,
+            [2] = game:GetService("Players").LocalPlayer.Character:WaitForChild("Torso")
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("PlaySoundRemote"):InvokeServer(unpack(args))
+    end
+end)
